@@ -44,10 +44,15 @@ async function run() {
         const serviceCollection = client.db("doctors-portal").collection("services");
         const bookingsCollection = client.db("doctors-portal").collection("bookings");
         const userCollection = client.db("doctors-portal").collection("users");
+        const doctorsCollection = client.db("doctors-portal").collection("doctors");
+
+
+
+        // Get Services
 
         app.get('/services', async (req, res) => {
             const query = {};
-            const cursor = serviceCollection.find(query);
+            const cursor = serviceCollection.find(query).project({ name: 1 });
             const services = await cursor.toArray();
 
             res.send(services);
@@ -165,6 +170,13 @@ async function run() {
             res.send({ success: true, result });
         })
 
+        // Add Doctors
+
+        app.post('/addDoctor', async (req, res) => {
+            const doctor = req.body;
+            const result = await doctorsCollection.insertOne(doctor);
+            res.send(result);
+        })
 
     }
     finally {
