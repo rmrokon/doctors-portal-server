@@ -128,20 +128,20 @@ async function run() {
             const date = req.query.date;
 
             // Get all services
-            const services = await serviceCollection.find().toArray();
+            const services = await serviceCollection?.find().toArray();
             // get the booking of the day
             const query = { date: date };
-            const bookings = await bookingsCollection.find(query).toArray();
+            const bookings = await bookingsCollection?.find(query).toArray();
             // for each service, find bookings for that service
             services.forEach(service => {
                 // FInd the bokings for the service
-                const serviceBookings = bookings.filter(b => b.name === service.name);
+                const serviceBookings = bookings?.filter(b => b.name === service.name);
                 // Select slot for the booking
-                const bookedSlots = serviceBookings.map(booking => booking.slot);
+                const bookedSlots = serviceBookings?.map(booking => booking.slot);
 
                 // Create available slots by removing the booked slots from the all slot array. These are the slots not available in the bookedSlots array.
-                const available = service.slot.filter(slot => !bookedSlots.includes(slot));
-                service.slot = available;
+                const available = service?.slots?.filter(slot => !bookedSlots.includes(slot));
+                service.slots = available;
             })
 
             res.send(services);
